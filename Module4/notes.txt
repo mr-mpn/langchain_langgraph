@@ -1,0 +1,24 @@
+Python generators are functions that use the yield keyword instead of return.
+They produce a sequence of values lazily, one at a time, instead of computing
+everything at once and storing it in memory. This makes them memory-efficient
+for large datasets or infinite sequences.
+
+A generator function returns a generator object when called. You can iterate
+over it with a for loop, or call next() on it manually to get one value at a
+time. Once exhausted, calling next() again raises StopIteration.
+
+Generator expressions look like list comprehensions but use parentheses
+instead of square brackets: (x*x for x in range(10)). They are a compact way
+to create generators without writing a full function.
+
+Decorators in Python are functions that wrap another function to extend or
+modify its behavior without changing its source code. They use the @syntax
+placed above a function definition. Common uses include logging, timing,
+access control, and caching (e.g. functools.lru_cache).
+
+Context managers, defined with the `with` statement, ensure that setup and
+teardown code runs reliably, even if an exception occurs. The classic example
+is file handling: `with open("file.txt") as f:` guarantees the file is closed
+afterward. You can build your own context managers using a class with
+__enter__ and __exit__, or more simply with the @contextmanager decorator
+from the contextlib module.
