@@ -36,7 +36,8 @@ agent_prompt = ChatPromptTemplate.from_messages([
 
 agent = create_tool_calling_agent(model, tools, agent_prompt)
 
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True) #AgentExecutor from Langchain is a blackbox - meaning we have no control over it 
+
 
 result = agent_executor.invoke({
     "input": "i have 3 euros , how much is it in USD Dollars ?"

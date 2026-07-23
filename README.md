@@ -14,7 +14,7 @@ All modules share a single `uv`-managed environment and a root-level `.env` for 
 
 ```
 uv init
-uv add langchain langchain-openai langgraph python-dotenv pydantic langchain-chroma langchain-community pypdf langchain-classic
+uv add langchain langchain-openai langgraph python-dotenv pydantic langchain-chroma langchain-community pypdf langchain-classic grandalf
 ```
 
 Copy `.env.example` to `.env` and fill in your OpenAI API key:
