@@ -6,7 +6,7 @@ A hands-on learning repo for LangChain / LangGraph fundamentals, working through
 - **Module 2** — Tools & function calling (`@tool`, `bind_tools`, manual tool-calling loop, Pydantic tool inputs)
 - **Module 3** — Memory & state (conversation history patterns, `RunnableWithMessageHistory`)
 - **Module 4** — Retrieval-Augmented Generation (RAG): document loaders, text splitters, embeddings, vector stores, retrieval chains with LCEL
-- **Module 5** — Introduction to agents (`create_tool_calling_agent`, `AgentExecutor`)
+- **Module 5** — Introduction to agents (`create_tool_calling_agent`, `AgentExecutor` from `langchain-classic`, since langchain 1.x moved these legacy agent APIs out of `langchain.agents`)
 
 All modules share a single `uv`-managed environment and a root-level `.env` for API keys.
 
@@ -14,7 +14,7 @@ All modules share a single `uv`-managed environment and a root-level `.env` for 
 
 ```
 uv init
-uv add langchain langchain-openai langgraph python-dotenv pydantic langchain-chroma langchain-community pypdf
+uv add langchain langchain-openai langgraph python-dotenv pydantic langchain-chroma langchain-community pypdf langchain-classic
 ```
 
 Copy `.env.example` to `.env` and fill in your OpenAI API key:
