@@ -61,7 +61,7 @@ uv run .\Module2\main.py
 
 Why "memory" is really just state management: conversation history patterns and `RunnableWithMessageHistory`.
 
-> This module intentionally shows a deprecated/non-best-practice pattern (`RunnableWithMessageHistory`) as a stepping stone — LangGraph's built-in persistence is the modern replacement.
+> This module intentionally shows a deprecated/non-best-practice pattern (`RunnableWithMessageHistory`) as a stepping stone — LangGraph's built-in persistence (see Module 9) is the modern replacement.
 
 ```
 uv run .\Module3\main.py
@@ -113,9 +113,47 @@ uv run .\Module7\main.py
 </details>
 
 <details>
-<summary><strong>Module 8 — coming soon</strong></summary>
+<summary><strong>Module 8 — LangGraph agents in practice</strong></summary>
 
-Not started yet.
+Builds a ReAct-style tool-calling agent from scratch in LangGraph: a `should_continue` router cycles between an `agent` node and a prebuilt `ToolNode` until the model stops requesting tools. Also demonstrates `graph.invoke()` (final result only) vs. `graph.stream()` (state after every node).
+
+```
+uv run .\Module8\main.py
+```
+
+**Extra:** `Module8\Extra\main.py` — a minimal 3-node graph side-by-side comparing `.invoke()` vs `.stream(stream_mode="values")`.
+</details>
+
+<details>
+<summary><strong>Module 9 — Persistence & memory in LangGraph</strong></summary>
+
+Checkpointers (`MemorySaver`): automatic state snapshots after every node, keyed by `thread_id`. Builds on Module 8's agent to demo (1) multi-turn conversations without manually tracking message lists, and (2) human-in-the-loop — pausing with `interrupt_before=["tools"]`, inspecting the pending tool call, and resuming with `graph.invoke(None, config=...)`.
+
+```
+uv run .\Module9\main.py
+```
+
+**Extra:** `Module9\Extra\main.py` — placeholder, not started yet.
+</details>
+
+<details>
+<summary><strong>Module 10 — Multi-agent systems</strong></summary>
+
+The supervisor pattern: a router node classifies the incoming request (`billing` / `tech_support` / `general`) and dispatches to a specialist node, each with its own system-prompt persona.
+
+```
+uv run .\Module10\main.py
+```
+</details>
+
+<details>
+<summary><strong>Module 11 — Intent-based routing</strong></summary>
+
+Similar idea to Module 10, but the classifier uses `with_structured_output` + a Pydantic `Literal` schema instead of a raw-text prompt, and the graph runs as an interactive loop with a `checkpointer` (`InMemorySaver`) so conversation history persists across turns of a single run.
+
+```
+uv run .\Module11\main.py
+```
 </details>
 
 ## Running a module
@@ -130,6 +168,10 @@ uv run .\Module4\main.py
 uv run .\Module5\main.py
 uv run .\Module6\main.py
 uv run .\Module7\main.py
+uv run .\Module8\main.py
+uv run .\Module9\main.py
+uv run .\Module10\main.py
+uv run .\Module11\main.py
 ```
 
 `Extra` scripts (bonus/variant examples) run the same way, e.g. `uv run .\Module2\Extra\main.py`.
@@ -140,3 +182,7 @@ uv run .\Module7\main.py
 - **File paths should be relative to the script, not the cwd.** If a module reads a local file (e.g. Module 4's `notes.txt`), resolve it with `Path(__file__).parent / "notes.txt"` rather than a bare relative string.
 - **`langchain` 1.x moved things around.** Legacy agent APIs (`create_tool_calling_agent`, `AgentExecutor`) live in `langchain-classic` now, not `langchain.agents`.
 - **ASCII graph rendering** (`graph.get_graph().draw_ascii()`) needs the `grandalf` package installed — you don't import it directly, it's just a dependency LangGraph uses internally.
+- **`add_messages` is the reducer, not `add_message`.** `Annotated[list, add_messages]` in a state's `TypedDict` makes LangGraph *append* new messages instead of overwriting the list — required for multi-turn/looping graphs (Modules 8–11).
+- **State is a plain `dict` at runtime**, even when typed as a `TypedDict` — access fields with `state["field"]`, not `state.field`.
+- **Emoji/unicode output can crash on Windows consoles** (`UnicodeEncodeError` from the default `cp1252` codepage). Fix with `sys.stdout.reconfigure(encoding='utf-8')` near the top of the script (see Module 11).
+- **Checkpointers need a `thread_id`.** Pass it via `config={"configurable": {"thread_id": ...}}` on every `invoke()`/`stream()` call — a new/different `thread_id` starts a completely isolated conversation.
