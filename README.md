@@ -1,4 +1,4 @@
-# tutorial_ai
+# Complete guide on how to use LangChain, LangGraph and LangSmith
 
 A hands-on, learn-by-running repo for LangChain / LangGraph fundamentals. Each module is a single, runnable `main.py` that builds on the last — start at Module 1 and work down.
 
